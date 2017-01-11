@@ -3,9 +3,12 @@ var restapp = angular.module('restdbH', ['ngResource']);
 
 restapp.config(function ($httpProvider) {
 
+  var apikey = "5821f61550e9b39131fe1b6f"; // gwfl-256d.restdb.io/rest/_meta
+  // var apikey = "569a2b87566759cf4b984a50";   // rdb-simpledb.restdb.io/rest/_meta
   $httpProvider.defaults.headers.common = {
-   'x-apikey': '569a2b87566759cf4b984a50'
+    'x-apikey': apikey
   };
+
 
 });
 
@@ -13,28 +16,28 @@ restapp.config(function ($httpProvider) {
 restapp.factory ('DBservice', function ($rootScope, $http, $resource) {
 
 var _getAll = function () {
-  $http.get('https://rdb-simpledb.restdb.io/rest/product')
+  $http.get('https://gwfl-256d.restdb.io/rest/gsc')
    .success(function (jsonData) {
      $rootScope.prod = jsonData;
   });
 };
 
 var _getContact = function () {
-  $http.get('https://rdb-simpledb.restdb.io/rest/contact?max=5&sort=_id&dir=-1')
+  $http.get('https://gwfl-256d.restdb.io/rest/gsc?max=3&sort=_id&dir=-1 ')
    .success(function (jsonData) {
      $rootScope.contact = jsonData;
   });
 };
 
 var _getMeta = function () {
-  $http.get('https://rdb-simpledb.restdb.io/rest/_meta')
+  $http.get('https://gwfl-256d.restdb.io/rest/_meta')
    .success(function (jsonData) {
      $rootScope.getMeta = jsonData;
    });
 };
 
 var _ngrContact = function () {
-  return $resource('https://rdb-simpledb.restdb.io/rest/contact/:id',
+  return $resource('https://gwfl-256d.restdb.io/rest/gsc/:id',
   { id: '@_id' }, {
     update: {
       method: 'PUT' // this method issues a PUT request
@@ -43,7 +46,7 @@ var _ngrContact = function () {
 };
 
 var _ngrProduct = function () {
-  return $resource('https://rdb-simpledb.restdb.io/rest/product/:id',
+  return $resource('https://gwfl-256d.restdb.io/rest/gsc/:id',
   { id: '@_id' }, {
     update: {
       method: 'PUT' // this method issues a PUT request
@@ -52,13 +55,20 @@ var _ngrProduct = function () {
 };
 
 
- var rdbContact = $resource('https://rdb-simpledb.restdb.io/rest/contact/:id');
- var todo1 = rdbContact.get({id: '5875445d7b9ba006000005f5'});
+ var rdbContact = $resource('https://gwfl-256d.restdb.io/rest/gsc/:id');
+
+//create a todo
+var todo1 = new rdbContact();
+todo1.foo = 'bar';
+todo1.something = 123;
+// todo1.$save();
+
+ // var todo1 = rdbContact.get({id: '5875445d7b9ba006000005f5'});
 // todo1.foo = 'bar';
 // todo1.something = 123;
 // todo1.$save();
-//   todo1.$delete({id: '5875445d7b9ba006000005f5'});
 
+//   todo1.$delete({id: '5875993a8b02984800000f33'});
 
  // var todo2 =  rdbContact.get({id: '58523daf88d3cc0800004e01'});
  // todo2.comment += '!lee';
