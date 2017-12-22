@@ -1,568 +1,287 @@
+ angular.module('copyExample', [])
 
-var restapp = angular.module('restdbH', ['ionic', 'ngResource']);
+ .factory("UserService", function($scope, $http) {
+ // var hh, mm, ss, ms = 0;
+  
+/* <h1><time>00:10:00</time></h1>
+<button id="start">start</button>
+<button id="stop">stop</button>
+<button id="clear">clear</button>
+<br><br> */
+var h1 = document.getElementsByTagName('time')[0],
+    start = document.getElementById('start'),
+    stop = document.getElementById('stop'),
+    clear = document.getElementById('clear'),
+    seconds = 60, minutes = 9, hours = 0,
+    t;
 
-restapp.config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-  $stateProvider
-
-    .state('app', {
-    url: "/app",
-    abstract: true,
-    templateUrl: "menu.html",
-    controller: 'AppCtrl'
-  })
-  .state('app.main', {
-    url: "/main",
-    views: {
-      'menuContent': {
-        templateUrl: "main.html",
-        controller: 'AppCtrl'
-      }
+function countdown() {
+    seconds--;
+    if (seconds === 0) {
+        seconds = 60;
+        minutes--;
+        if (minutes === 0) {
+            minutes = 59;
+            hours--;
+        }
     }
-  });
+    
+    h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/main');
+    timer();
+}
+function timer() {
+    t = setTimeout(countdown, 1000);
+}
+timer();
 
-  var apikey = "5821f61550e9b39131fe1b6f"; // gwfl-256d.restdb.io/rest/_meta
-  // var apikey = "569a2b87566759cf4b984a50";   // rdb-simpledb.restdb.io/rest/_meta
-  $httpProvider.defaults.headers.common = {
-    'x-apikey': apikey
-  };
+/* Start button */
+start.onclick = timer;
 
-});
-
-// create a new factory
-restapp.factory ('DBservice', function ($rootScope, $http, $resource) {
-
-var _getAll = function () {
-  $http.get('https://gwfl-256d.restdb.io/rest/gsc')
-   .success(function (jsonData) {
-     $rootScope.prod = jsonData;
-  });
+/* Stop button */
+stop.onclick = function() {
+    clearTimeout(t);
 };
 
-var _getContact = function () {
-  $http.get('https://gwfl-256d.restdb.io/rest/gsc?max=3&sort=_id&dir=-1 ')
-   .success(function (jsonData) {
-     $rootScope.contact = jsonData;
-  });
+/* Clear button */
+clear.onclick = function() {
+    h1.textContent = "00:10:00";
+    seconds = 60; minutes = 9; hours = 0;
+};
+
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://www.codecademy.com/files/samples/javascript_learn_apis.xml", false);
+xhr.setRequestHeader('Content-Type', 'text/xml');
+xhr.send();
+xmlDocument = xhr.responseXML;
+console.log(xmlDocument.childNodes['0'].textContent);
+
+var calculateDistance = function(lat1, lon1, lat2, lon2) {
+    var R = 6371; // km
+    var dLat = (lat2-lat1).toRad();
+    var dLon = (lon2-lon1).toRad();
+  lat1 = lat1.toRad();
+  lat2 = lat2.toRad();
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c;
+    return d;
 };
 
 var _getMeta = function () {
-  $http.get('https://gwfl-256d.restdb.io/rest/_meta')
+  // $http.get('https://gwfl-256d.restdb.io/rest/_meta?apikey=5821f61550e9b39131fe1b6f')
+  // $http.get('https://gwfl-256d.restdb.io/rest/scores/_meta?apikey=5821f61550e9b39131fe1b6f')
+  // $http.get('https://gwfl-256d.restdb.io/rest/gsc/_meta?apikey=5821f61550e9b39131fe1b6f') 
+  
+  $http.get('https://api.airtable.com/v0/app0hohtq4b1nM0Kb/Courses?api_key=key66fQg5IghIIQmb')   
    .success(function (jsonData) {
      $rootScope.getMeta = jsonData;
    });
 };
 
-var _ngrContact = function () {
-  return $resource('https://gwfl-256d.restdb.io/rest/gsc/:id',
-  { id: '@_id' }, {
-    update: {
-      method: 'PUT' // this method issues a PUT request
+})  // end UserService
+
+.controller('AccordionDemoCtrl', function ($scope) {
+  $scope.oneAtATime = true;
+
+  $scope.groups = [
+    {
+      title: 'Dynamic Group Header - 1',
+      content: 'Dynamic Group Body - 1'
+    },
+    {
+      title: 'Dynamic Group Header - 2',
+      content: 'Dynamic Group Body - 2'
     }
-  });
-};
+  ];
 
-var _ngrProduct = function () {
-  return $resource('https://gwfl-256d.restdb.io/rest/gsc/:id',
-  { id: '@_id' }, {
-    update: {
-      method: 'PUT' // this method issues a PUT request
-    }
-  });
-};
+  $scope.items = ['Item 1', 'Item 2', 'Item 3'];
 
-
- var rdbContact = $resource('https://gwfl-256d.restdb.io/rest/gsc/:id');
-
-//create a todo
-var todo1 = new rdbContact();
-todo1.foo = 'bar';
-todo1.something = 123;
-// todo1.$save();
-
- // var todo1 = rdbContact.get({id: '5875445d7b9ba006000005f5'});
-// todo1.foo = 'bar';
-// todo1.something = 123;
-// todo1.$save();
-
-//   todo1.$delete({id: '5875993a8b02984800000f33'});
-
- // var todo2 =  rdbContact.get({id: '58523daf88d3cc0800004e01'});
- // todo2.comment += '!lee';
- // todo2.$save();
-
-/* 
-
-//create a todo
-var todo1 = new rdbContact();
-todo1.foo = 'bar';
-todo1.something = 123;
-todo1.$save();
-
- todo2.$delete({id: '587539dc7b9ba00600000467'});
- todo2.$delete({id: '587539d47b9ba00600000466'});
- todo2.$delete({id: '587539ac7b9ba00600000458'});
- todo2.$delete({id: '587539bd7b9ba0060000045c'});
- 
-*/
- 
-  return {
-    //  getAll: _getAll,  //   _ngrProduct().query(),   
-    getMeta: _getMeta,
-    getContact: _getContact,
-    getAll: _ngrProduct().query(),  
-    ngrContact: _ngrContact().query() // get({id: '587539877b9ba00600000455'})
+  $scope.addItem = function() {
+    var newItemNo = $scope.items.length + 1;
+    $scope.items.push('Item ' + newItemNo);
   };
-});
 
-restapp.run( function ($ionicPlatform, $rootScope, DBservice) {
-   $rootScope.getMeta  = DBservice.getMeta();
-   $rootScope.contact = DBservice.getContact();
-   $rootScope.ngrContact = DBservice.ngrContact;
-   $rootScope.prod = DBservice.getAll;
+  $scope.status = {
+    isCustomHeaderOpen: false,
+    isFirstOpen: true,
+    isFirstDisabled: false
+  };
+})   // end Accordion Ctrl
+ 
+ .controller('ExampleController', ['$scope', '$interval', '$timeout', '$http', function($scope, $interval, $timeout, $http) {
+// http.get('courses.json').success(function(data) { $scope.courses = data });
 
-    $ionicPlatform.ready(function() {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
-      //  if(window.cordova && window.cordova.plugins.Keyboard) {
-      //    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      //  }
-      if (window.StatusBar) {
-        StatusBar.styleDefault();
+    var gameClock;
+    $scope.minutes = 10;  $scope.seconds = 0;
+    $scope.inGame = function() {
+      // Don't start a new clock if already running
+      if ( angular.isDefined(gameClock) ) return;
+      gameClock = $interval(function() {
+        $scope.seconds--;
+        if ($scope.seconds < 0) {
+          $scope.minutes--;
+          $scope.seconds = 59;
+        }
+      }, 1000);
+    };
+
+    $scope.stopGame = function() {
+      if (angular.isDefined(gameClock)) {
+        $interval.cancel(gameClock);
+        gameClock = undefined;
       }
+    };
+
+    $scope.resetGame = function() {
+      $scope.stopGame();
+      $scope.minutes = 10;
+      $scope.seconds = 0;
+    };
+
+    $scope.$on('$destroy', function() {
+      // Make sure that the interval is destroyed too
+      $scope.stopGame();
     });
 
-    function storageAvailable(type) {
-      try {
-        var storage = window[type],
-          x = '__storage_test__';
-        storage.setItem(x, x);
-        storage.clear();
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-    $rootScope.appLog = "Sorry, No Storage Here.";
-    if (storageAvailable('sessionStorage')) {
-      // Yippee! We can use localStorage awesomeness
-      $rootScope.appLog = " ";
-    }
+     $scope.master= {};
 
-    $rootScope.vGm00 = {
-      vGH: {
-        pp: 0,
-        ff: 0,
-        tt: 0
-      },
-      vGV: {
-        pp: 0,
-        ff: 0,
-        tt: 0
-      },
-      vP: [{
-        "Nm": "Damien",
-        "Nu": "4",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Brandon",
-        "Nu": "3",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Sky",
-        "Nu": "2",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Mason",
-        "Nu": "11",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Aidan",
-        "Nu": "10",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Chace",
-        "Nu": "1",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Miguel",
-        "Nu": "12",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Cody",
-        "Nu": "5",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }, {
-        "Nm": "Gabe",
-        "Nu": "00",
-        "onc": false,
-        "pp": 0,
-        "pf": 0,
-        "rrfg": 0,
-        "rr3p": 0,
-        "rrft": 0,
-        "inG": 0,
-        "outG": 0,
-        "totPss": 0,
-        "y2p": 0,
-        "x2p": 0,
-        "y3p": 0,
-        "x3p": 0,
-        "yft": 0,
-        "xft": 0,
-        "ast": 0,
-        "stl": 0,
-        "drb": 0,
-        "orb": 0,
-        "tov": 0,
-        "blk": 0,
-        "tf": 0
-      }]
-    };
-    localStorage.setItem('vGm00', JSON.stringify($rootScope.vGm00));
+     $scope.update = function(user) {
+       // Example with 1 argument
+       $scope.master= angular.copy(user);
+     };
 
-    if (localStorage.getItem('vGm') !== null) {
-      $rootScope.vGm = JSON.parse(localStorage.getItem('vGm'));
-    } else {
-      $rootScope.vGm = JSON.parse(localStorage.getItem('vGm00'));
-    }
+     $scope.reset = function() {
+       // Example with 2 arguments
+       angular.copy($scope.master, $scope.user);
+       $scope.content00 = false;
+     };
+     $scope.reset();
 
-    localStorage.setItem('vGm', JSON.stringify($rootScope.vGm));
-//    $rootScope.appLog += ".run";
+      $scope.color = {
+        name: 'blue'
+      };
+      $scope.specialValue = {
+        "id": "12345",
+        "value": "green"
+      };
 
-}); //  end .run
+
+//  ** GeoLocation  Coords **  
+//<br><br>
+//<pre>GPS = {{GPSlat}}, {{GPSlon}}</pre>
+//<br><br>
+
+var GPSoptions = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+function GPSsuccess(pos) {
+  var crd = pos.coords;
+
+  $scope.GPSlat = crd.latitude;
+  $scope.GPSlon = crd.longitude;
   
-restapp.controller('AppCtrl', function($scope, $rootScope) {
+} //  asdfjasdf
 
-// $scope.rs$ = $rootScope;
-//  $rootScope.appLog += ".AppC";
+function GPSerror(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+} // asdfjadsf
 
-  $scope.tglundoCB = function() {
-    $scope.undoCB = !$scope.undoCB;
+navigator.geolocation.getCurrentPosition(GPSsuccess, GPSerror, GPSoptions);
+
+
+
+    $scope.example = {
+      value: 12, tnull: null
+    };
+      
+    $scope.payBill = [
+                    { bill: "Tution", paid:true },
+                    { bill: "Electricity", paid: false },
+                    { bill: "Internet", paid: false},
+                    { bill: "Income Tax", paid: false },
+                    { bill: "Subway Pass", paid: true },
+                    { bill: "Library", paid: false }];
+                    
+    $scope.toggle00 = function () {
+      $scope.content00 = !$scope.content00; 
+      $scope.inGame();
+      $scope.example.tnull = 43;
+    };
+        
+   }])  // end ExampleController 
+
+ .controller('PromiseCtrl', ['$scope', '$interval', '$http', function($scope, $interval, $http) {
+    $scope.example1 = $http.get('/echo/json');
+    
+    $http.get('players.json').then(function(value) {
+        $scope.example2 = value.status;
+    });
+    
+    $http.get('players.json/error').then(null, function(value) {
+        $scope.example3 = value.status;
+    });
+    
+    $http.get('players.json').success(function(data, status, headers, config) {
+        $scope.example4 = status + " " + data.length;
+        for (ii = 0; ii < data.length; ii++) {
+          $scope.example4 += data[ii].Nm + " ";
+          $scope.example4 += data[ii].Nu;
+        }
+    });
+    
+    $http.get('players.json/error').error(function(data, status, headers, config) {
+        $scope.example5 = status;
+    });
+    
+    $http.get('players.json/error').catch(function(value) {
+        $scope.example6 = value.status;
+    });
+    
+    $http.get('players.json').then(function(value) {
+        $scope.example7 = value.status;
+    }).finally(function() {
+        $scope.example7 += " (Finally called)";
+    });
+    
+    $http.get('players.json/error').then(null, function(value) {
+        $scope.example8 = value.status;
+    }).finally(function() {
+        $scope.example8 += " (Finally called)";
+    });
+
+}])  // end PromiseCtrl
+
+.factory('$xhrFactory', function() {
+  return function createXhr(method, url) {
+    return new window.XMLHttpRequest({mozSystem: true});
   };
+})  // end xhrFactory
 
-  $scope.pTally = function(tt, xx) {
-
-    if ($scope.undoCB) {
-      undo = -1;
-    } else {
-      undo = 1;
+.directive('coolStuff', function() {
+    return function(scope) {
+      var setFalse = function(val, link, active) {
+        active[link] = false;
+      };
+      scope.active = {};
+      scope.select = function(link) {
+        _.each(scope.active, setFalse); // lodash used for brevity
+          scope.active[link] = true;
+      };
     }
+})  // end coolStuff directive
 
-    if (xx < 0) {
-      $scope.ttIdx = tt;
-      $rootScope.appLog += " .h:" + tt;
-    } else {
-      $rootScope.vGm.vP[xx].onc2 = false;
-      $scope.undoCB = false;
-      $scope.ttIdx = '.';
-      $rootScope.appLog = ' >' + tt +  $rootScope.vGm.vP[xx].Nu + ':  ' + $rootScope.appLog; //  
-      $rootScope.appLog = $rootScope.appLog.substring(0, 20);
-    }
+.directive('appInfo', function() { 
+  return { 
+    restrict: 'E', 
+    scope: { info: '=' }, 
+    templateUrl: 'js/directives/appInfo.html' 
+  }; 
+})  // end directive appInfo
 
-    switch (tt) {
-      case 'y2p':
-        if (xx < 0) {
-          $rootScope.vGm.vGH.pp += 2 * undo;
-        } else {
-          $rootScope.vGm.vP[xx].pp += 2 * undo;
-          $rootScope.vGm.vP[xx].y2p += 1 * undo;
-          $rootScope.vGm.vP[xx].rrfg = Math.round(($rootScope.vGm.vP[xx].y2p / ($rootScope.vGm.vP[xx].x2p + $rootScope.vGm.vP[xx].y2p)) * 100);
-        }
-        break;
-      case 'x2p':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].x2p += 1 * undo;
-          $rootScope.vGm.vP[xx].rrfg = Math.round(($rootScope.vGm.vP[xx].y2p / ($rootScope.vGm.vP[xx].x2p + $rootScope.vGm.vP[xx].y2p)) * 100);
-        }
-        break;
-      case 'y3p':
-        if (xx < 0) {
-          $rootScope.vGm.vGH.pp += 3 * undo;
-        } else {
-          $rootScope.vGm.vP[xx].pp += 3 * undo;
-          $rootScope.vGm.vP[xx].y3p += 1 * undo;
-          $rootScope.vGm.vP[xx].rr3p = Math.round(($rootScope.vGm.vP[xx].y3p / ($rootScope.vGm.vP[xx].x3p + $rootScope.vGm.vP[xx].y3p)) * 100);
-        }
-        break;
-      case 'x3p':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].x3p += 1 * undo;
-          $rootScope.vGm.vP[xx].rr3p = Math.round(($rootScope.vGm.vP[xx].y3p / ($rootScope.vGm.vP[xx].x3p + $rootScope.vGm.vP[xx].y3p)) * 100);
-        }
-        break;
-      case 'yft':
-        if (xx < 0) {
-          $rootScope.vGm.vGH.pp += 1 * undo;
-        } else {
-          $rootScope.vGm.vP[xx].pp += 1 * undo;
-          $rootScope.vGm.vP[xx].yft += 1 * undo;
-          $rootScope.vGm.vP[xx].rrft = Math.round(($rootScope.vGm.vP[xx].yft / ($rootScope.vGm.vP[xx].xft + $rootScope.vGm.vP[xx].yft)) * 100);
-        }
-        break;
-      case 'xft':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].xft += 1 * undo;
-          $rootScope.vGm.vP[xx].rrft = Math.round(($rootScope.vGm.vP[xx].yft / ($rootScope.vGm.vP[xx].xft + $rootScope.vGm.vP[xx].yft)) * 100);
-        }
-        break;
-      case 'ast':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].ast += 1 * undo;
-        }
-        break;
-      case 'stl':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].stl += 1 * undo;
-        }
-        break;
-      case 'blk':
-        if (xx >= 0) {
-          $rootScope.vGm.vP[xx].blk += 1 * undo;
-        }
-        break;
-      case 'drb':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].drb += 1 * undo;
-        }
-        break;
-      case 'orb':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].orb += 1 * undo;
-        }
-        break;
-      case 'tov':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].tov += 1 * undo;
-        }
-        break;
-      case 'pf':
-        if (xx < 0) {
-          $rootScope.vGm.vGH.ff += 1 * undo;
-        } else {
-          $rootScope.vGm.vP[xx].pf += 1 * undo;
-        }
-        break;
-      case 'tf':
-        if (xx < 0) {
-          // $rootScope.vGm.vGH.pp += 0 * undo; 
-        } else {
-          $rootScope.vGm.vP[xx].tf += 1 * undo;
-        }
-        break;
-      case 'v2p':
-        $rootScope.vGm.vGV.pp += 2 * undo;
-        $scope.undoCB = false;
-        break;
-      case 'v3p':
-        $rootScope.vGm.vGV.pp += 3 * undo;
-        $scope.undoCB = false;
-        break;
-      case 'vft':
-        $rootScope.vGm.vGV.pp += 1 * undo;
-        $scope.undoCB = false;
-        break;
-      case 'vpf':
-        $rootScope.vGm.vGV.ff += 1 * undo;
-        $scope.undoCB = false;
-        break;
-      default:
-        $rootScope.appLog = ">";
-        break;
-    }
-
-    localStorage.setItem('vGm', JSON.stringify($rootScope.vGm));
-  };
-
-  $scope.resetLS = function() {
-    localStorage.removeItem('vGm'); // clear();   
-    $rootScope.vGm = JSON.parse(localStorage.getItem('vGm00'));
-  };
-
-});
+; // module copyExample
