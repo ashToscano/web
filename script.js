@@ -1,6 +1,6 @@
 angular.module('copyExample', [])
 
- .factory("UserService", function($scope, $http) {
+ .factory("UserService", function($scope) {
 
 var calculateDistance = function(lat1, lon1, lat2, lon2) {
     var R = 6371; // km
