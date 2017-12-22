@@ -18,7 +18,7 @@ var calculateDistance = function(lat1, lon1, lat2, lon2) {
 
 })  // end UserService
  
- .controller('ExampleController', ['$scope',  function($scope) {
+ .controller('ExampleController', ['$scope',  function($scope, navigator) {
 
 //  ** GeoLocation  Coords **  
 //<br><br>
