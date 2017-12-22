@@ -3,25 +3,191 @@
 
 <head>
   <meta charset="utf-8" />
+  <title>C M G</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-
-  <title>CMG</title>
-
+  <!-- Le styles -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/fontawesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
   <link href="style.css" rel="stylesheet" />
+  <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <!-- Le fav and touch icons -->
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
 
 </head>
 
 <body ng-app="copyExample">
 <div ng-controller="ExampleController">
-
+  
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">AngularJS ref</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active" data-toggle="collapse" data-target="#myNavbar"><a href="#">Home</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Page 1-1</a></li>
+            <li><a href="#">Page 1-2</a></li>
+            <li><a href="#">Page 1-3</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Page 2</a></li>
+        <li><a href="#">Page 3</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li data-toggle="collapse" data-target="#myNavbar"><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li data-toggle="collapse" data-target="#myNavbar"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<h1><time>{{minutes}}:{{seconds}}</time></h1>
+<button ng-click="inGame()">start</button>
+<button ng-click="stopGame()">stop</button>
+<button ng-click="resetGame()">clear</button>
 <br><br>
-<pre><h1><time>GPS = {{GPSlat}}, {{GPSlon}}</time></h1></pre>
+<pre>GPS = {{GPSlat}}, {{GPSlon}}</pre>
 <br><br>
+<form novalidate class="simple-form">
+Name: <input type="text" ng-model="user.name" /><br />
+E-mail: <input type="email" ng-model="user.email" /><br />
+Gender: <input type="radio" ng-model="user.gender" value="male" />male
+<input type="radio" ng-model="user.gender" value="female" />female<br />
+<button ng-click="reset()">RESET</button>
+<button ng-click="update(user)">SAVE</button>
+<button ng-click="toggle00()">AngularJS btn</button>
+<div ng-hide="content00">AngularJS toggle content</div>
+<br>
+<label>Number:
+    <input type="number" name="input" ng-model="example.value"
+           min="0" max="99" required>
+ </label>
+  <div role="alert">
+    <span class="error" ng-show="myForm.input.$error.required">
+      Required!</span>
+    <span class="error" ng-show="myForm.input.$error.number">
+      Not valid number!</span>
+  </div>
+  <tt>value = {{example.value + example.tnull}}</tt><br/>
+  <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
+  <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
+  <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
+  <tt>myForm.$error.required = {{!!myForm.$error.required}}</tt><br/>
+</form>
+<pre>form = {{user | json}}</pre>
+<pre>master = {{master | json}}</pre>
 
+  <p> <h3> </h3> 
+
+<form name="myForm">
+  <label class="radio-inline"><input type="radio" name="optradio" ng-model="color.name" value="red">
+    Red </label>
+  <label class="radio-inline"><input type="radio" name="optradio" ng-model="color.name" ng-value="specialValue">
+    Green </label>
+  <label class="radio-inline"><input type="radio" name="optradio" ng-model="color.name" value="blue">
+    Blue  </label> 
+  <h5>color = {{color.name | json}}</h5> 
+  <p> <h3> </h3> 
+ </form>
+
+Click me: <input type="checkbox" ng-model="checked" aria-label="Toggle ngShow"><br/>
+<div>
+  Show:
+  <div class="check-element animate-hide" ng-show="checked">
+    <span class="glyphicon glyphicon-thumbs-up"></span> I show up when your checkbox is checked.
+  </div>
+</div>
+<div>
+  Hide:
+  <div class="check-element animate-hide" ng-hide="checked">
+    <span class="glyphicon glyphicon-thumbs-down"></span> I hide when your checkbox is checked.
+  </div>
+</div>
+
+  <input type="button" value="Apply CSS" ng-click="setting='demoClass'"> 
+                                        <!-- apply Classes-->
+  <input type="button" value="Remove CSS" ng-click="setting=''">
+                                       <!-- remove Classes-->
+<br>
+<p class="standard" ng-class="setting">Tutorials Park</p>
+  
+      <div id="billPayPanel" class="panel">
+      <h3 class="panel-header">AngularJS Application : Bill Payment</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Bill Names</th>
+                    <th>Bills</th>
+                    <th>Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                 <tr ng-repeat="billNames in payBill">
+                    <td>
+                       {{billNames}}
+                    </td>
+                    <td ng-repeat="(key, value) in billNames">
+                        {{key}}={{value}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>      
+    </div>
+
+</div> <!-- ExampleController -->
+
+<hr>
+
+<div ng-controller="PromiseCtrl">
+      <h2>$http.get()</h2>
+      <h3>Example 1 : The promise object returned by $http.get()</h3>
+      <p>{{example1}}</p>
+      <h3>Example 2 : Success callback with then()</h3>
+      <p>{{example2}}</p>
+      <h3>Example 3 : Error callback with then()</h3>
+      <p>{{example3}}</p>
+      <h3>Example 4 : Success callback with success()</h3>
+      <p>{{example4}}</p>
+      <h3>Example 5 : Error callback with error()</h3>
+      <p>{{example5}}</p>
+      <h3>Example 6 : Error callback with catch()</h3>
+      <p>{{example6}}</p>
+      <h3>Example 7 : Success callback followed by finally()</h3>
+      <p>{{example7}}</p>
+      <h3>Example 8 : Error callback followed by finally()</h3>
+      <p>{{example8}}</p>
+
+<div>
+There are just four HTTP "verbs" you'll need to know! They are:
+<ul>
+  <li>GET: retrieves information from the specified source (you just saw this one!)</li>
+  <li>POST: sends new information to the specified source.</li>
+  <li>PUT: updates existing information of the specified source.</li>
+  <li>DELETE: removes existing information from the specified source.</li>
+</ul>
+</div>
+
+</div>  <!-- end PromiseCtrl -->
+
+  <!-- Le javascript
+    ================================================== -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
@@ -33,5 +199,6 @@
   <script src="https://platform.twitter.com/widgets.js"></script>
   <script src="script.js"></script>
 
-</body>
+</body> <!-- ng-app -->
+
 </html>
