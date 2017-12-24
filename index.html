@@ -58,33 +58,18 @@
   </div>
 </nav>
   
-<h1><time>{{minutes}}:{{seconds}}</time></h1>
-<button ng-click="inGame()">start</button>
-<button ng-click="stopGame()">stop</button>
-<button ng-click="resetGame()">clear</button>
 <br><br>
-<pre><h1><time>GPS = {{GPSlat}}, <br> {{GPSlon}} <br> {{calcD}}</time></h1></pre>
+<pre><h1>GPS</h1> {{GPSlat}}, {{GPSlon}} <br><br> {{calcD}}</pre>
 <br><br>
-<button ng-click="reset()">RESET</button>
-<button ng-click="update(user)">SAVE</button>
-<button ng-click="toggle00()">AngularJS btn</button>
-<div ng-hide="content00">AngularJS toggle content</div>
-<br>
-<label>Number:
-    <input type="number" name="input" ng-model="example.value"
-           min="0" max="99" required>
-</label>
-  <div role="alert">
-    <span class="error" ng-show="myForm.input.$error.required">
-      Required!</span>
-    <span class="error" ng-show="myForm.input.$error.number">
-      Not valid number!</span>
-  </div>
+<button ng-click="setMarker()">SET Marker</button>
+<button ng-click="calcDistance()">Calc Distance</button>
 
   <p> <h3> </h3> 
 
-
 </div> <!-- ExampleController -->
+
+<hr>
+
 
   <!-- Le javascript
     ================================================== -->
