@@ -61,7 +61,7 @@ clear.onclick = function() {
 
 navigator.geolocation.getCurrentPosition(GPSsuccess, GPSerror, GPSoptions);
 
-$scope.calcD = getDistanceFromLatLonInKm(33.8516291, -118.3805814, $scope.GPSlat, $scope.GPSlon).toFixed(2);
+$scope.calcD = getDistanceFromLatLonInKm(33.8516291, -118.3805814, $scope.GPSlat, $scope.GPSlon); // .toFixed(2);
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371000; // Radius of the earth in km
