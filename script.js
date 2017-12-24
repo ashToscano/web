@@ -59,6 +59,8 @@ clear.onclick = function() {
 //<pre>GPS = {{GPSlat}},<br> {{GPSlon}}<br> {{calcD}}</pre>
 //<br><br>
 
+navigator.geolocation.getCurrentPosition(GPSsuccess, GPSerror, GPSoptions);
+
 $scope.calcD = getDistanceFromLatLonInKm(33.8516291, -118.3805814, $scope.GPSlat, $scope.GPSlon).toFixed(2);
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -96,8 +98,6 @@ function GPSsuccess(pos) {
 function GPSerror(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 } // asdfjadsf
-
-navigator.geolocation.getCurrentPosition(GPSsuccess, GPSerror, GPSoptions);
       
    }])  // end ExampleController 
 
