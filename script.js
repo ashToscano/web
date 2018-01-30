@@ -54,7 +54,7 @@ clear.onclick = function() {
  
  .controller('ExampleController', ['$scope', '$interval', '$timeout', '$http', function($scope, $interval, $timeout, $http) {
    
- var dNow = Date.now();
+ var dNow = Date.now() +   $scope.GPSlat +  $scope.GPSlon;
  $scope.data =   JSON.stringify({"name":"gwfLEEdb!!","rawScore":10,"idx":dNow,"type":"rbyb-2" });
 $http.put('https://gwfl-256d.restdb.io/rest/scores/5a6b9e9da07bee72000109a7?apikey=5821f61550e9b39131fe1b6f', $scope.data);
   
