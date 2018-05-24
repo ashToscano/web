@@ -1,2 +1,2 @@
-# cmg
-CMG sample - basic bootstrap
+# web
+Web sample - basic bootstrap
